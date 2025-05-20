@@ -1,23 +1,22 @@
+// src/App.js
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import FeedbackForm from './FeedbackForm';
 import AdminLogin from './AdminLogin';
-// App.js or index.js
-import './App.css';
 import AdminDashboard from './AdminDashboard';
+import './App.css';
 
-import { Route } from 'react-router-dom';
-
-
-// ...
-<Route path="/admin" element={<AdminDashboard />} />
 
 
 function App() {
   return (
-    <div>
-      <FeedbackForm />
-      <AdminLogin />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<FeedbackForm />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </Router>
   );
 }
 
