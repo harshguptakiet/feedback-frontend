@@ -3,6 +3,10 @@ import FeedbackForm from './FeedbackForm';
 import AdminLogin from './AdminLogin';
 // App.js or index.js
 import './App.css';
+import AdminDashboard from './AdminDashboard';
+// ...
+<Route path="/admin" element={<AdminDashboard />} />
+
 
 function App() {
   return (

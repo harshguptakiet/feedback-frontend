@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie, Bar } from 'react-chartjs-2';
+import { Chart, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import './AdminDashboard.css';
 
-Chart.register(ArcElement, Tooltip, Legend);
+Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function AdminDashboard() {
   const [summary, setSummary] = useState({});
   const [feedbacks, setFeedbacks] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState('');
-  const [wordcloudURL, setWordcloudURL] = useState('');
 
   useEffect(() => {
     fetch('https://feedback-backend-k4pk.onrender.com/admin/summary')
@@ -17,63 +15,56 @@ function AdminDashboard() {
       .then(data => {
         setSummary(data.summary);
         setFeedbacks(data.feedback);
-        setEvents(data.events);
       });
-
-    setWordcloudURL('https://feedback-backend-k4pk.onrender.com/admin/wordcloud');
   }, []);
 
-  const filteredFeedbacks = selectedEvent ? feedbacks.filter(f => f[1] === selectedEvent) : feedbacks;
+  const pieData = {
+    labels: Object.keys(summary),
+    datasets: [{
+      label: 'Feedback Sentiment',
+      data: Object.values(summary),
+      backgroundColor: ['green', 'gray', 'red'],
+    }]
+  };
 
-  const handleExport = () => {
-    window.open('https://feedback-backend-k4pk.onrender.com/admin/export');
+  const barData = {
+    labels: Object.keys(summary),
+    datasets: [{
+      label: 'Feedback Count',
+      data: Object.values(summary),
+      backgroundColor: ['rgba(0,255,0,0.5)', 'rgba(128,128,128,0.5)', 'rgba(255,0,0,0.5)']
+    }]
   };
 
   return (
-    <div>
-      
-      <h2 style={{ color: '#0ff', textShadow: '0 0 10px #0ff' }}>📊 Admin Dashboard</h2>
-<p style={{ color: '#0ff' }}>
-  🔍 This dashboard displays a live summary of feedback sentiments submitted by users. Our AI model classifies responses into Positive, Neutral, or Negative.
-</p>
+    <div className="admin-dashboard">
+      <h2>📊 Feedback Summary</h2>
+      <p>This section visually represents the overall sentiment distribution from student feedback.</p>
 
-
-      <div>
-        <label>Filter by Event:</label>
-        <select onChange={e => setSelectedEvent(e.target.value)}>
-          <option value="">All Events</option>
-          {events.map((ev, i) => (
-            <option key={i} value={ev}>{ev}</option>
-          ))}
-        </select>
+      <div className="chart-row">
+        <div className="chart"><Pie data={pieData} /></div>
+        <div className="chart"><Bar data={barData} /></div>
       </div>
 
-      <Pie data={{
-        labels: Object.keys(summary),
-        datasets: [{
-          data: Object.values(summary),
-          backgroundColor: ['green', 'gray', 'red'],
-        }]
-      }} />
-
-      <button onClick={handleExport}>Download CSV</button>
-
-      <h3>Feedbacks</h3>
-      <table border="1">
+      <h3>📋 Detailed Feedback Analysis</h3>
+      <p>Each feedback includes the sentiment label and the VADER sentiment scores (positive, neutral, negative, and compound).</p>
+      <table>
         <thead>
-          <tr><th>Name</th><th>Event</th><th>Feedback</th><th>Sentiment</th><th>Rating</th><th>Date</th></tr>
+          <tr>
+            <th>Name</th><th>Event</th><th>Feedback</th><th>Sentiment</th>
+            <th>Compound</th><th>Pos</th><th>Neu</th><th>Neg</th>
+          </tr>
         </thead>
         <tbody>
-          {filteredFeedbacks.map((f, i) => (
+          {feedbacks.map((f, i) => (
             <tr key={i}>
-              <td>{f[0]}</td><td>{f[1]}</td><td>{f[2]}</td><td>{f[3]}</td><td>{f[4]}</td><td>{f[5]}</td>
+              <td>{f[0]}</td><td>{f[1]}</td><td>{f[2]}</td><td>{f[3]}</td>
+              <td>{f[4].toFixed(2)}</td><td>{f[5].toFixed(2)}</td>
+              <td>{f[6].toFixed(2)}</td><td>{f[7].toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <h3>Word Cloud</h3>
-      <img src={wordcloudURL} alt="Word Cloud" width="600" />
     </div>
   );
 }
