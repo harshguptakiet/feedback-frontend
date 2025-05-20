@@ -5,7 +5,8 @@ import AdminLogin from './AdminLogin';
 import './App.css';
 import AdminDashboard from './AdminDashboard';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+
 
 // ...
 <Route path="/admin" element={<AdminDashboard />} />
