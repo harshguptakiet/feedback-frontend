@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AdminDashboard from './AdminDashboard';
 
+
 function AdminLogin() {
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
