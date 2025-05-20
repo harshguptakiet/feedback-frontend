@@ -9,80 +9,66 @@ function AdminDashboard() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState('');
-
-  const fetchData = (eventFilter = '') => {
-    const url = eventFilter
-      ? `https://feedback-backend-k4pk.onrender.com/admin/summary?event=${encodeURIComponent(eventFilter)}`
-      : 'https://feedback-backend-k4pk.onrender.com/admin/summary';
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        setSummary(data.summary || {});
-        setFeedbacks(data.feedback || []);
-      });
-  };
-
-  const fetchEventList = () => {
-    fetch('https://feedback-backend-k4pk.onrender.com/admin/summary') // all feedbacks
-      .then(res => res.json())
-      .then(data => {
-        const uniqueEvents = Array.from(new Set(data.feedback.map(fb => fb[1])));
-        setEvents(uniqueEvents);
-      });
-  };
+  const [wordcloudURL, setWordcloudURL] = useState('');
 
   useEffect(() => {
-    fetchData();
-    fetchEventList();
+    fetch('https://<your-backend>.onrender.com/admin/summary')
+      .then(res => res.json())
+      .then(data => {
+        setSummary(data.summary);
+        setFeedbacks(data.feedback);
+        setEvents(data.events);
+      });
+
+    setWordcloudURL('https://<your-backend>.onrender.com/admin/wordcloud');
   }, []);
 
-  const handleEventChange = (e) => {
-    const value = e.target.value;
-    setSelectedEvent(value);
-    fetchData(value);
+  const filteredFeedbacks = selectedEvent ? feedbacks.filter(f => f[1] === selectedEvent) : feedbacks;
+
+  const handleExport = () => {
+    window.open('https://<your-backend>.onrender.com/admin/export');
   };
 
   return (
     <div>
       <h2>Admin Dashboard</h2>
 
-      <label>Select Event:&nbsp;</label>
-      <select value={selectedEvent} onChange={handleEventChange}>
-        <option value="">All Events</option>
-        {events.map((ev, idx) => (
-          <option key={idx} value={ev}>{ev}</option>
-        ))}
-      </select>
+      <div>
+        <label>Filter by Event:</label>
+        <select onChange={e => setSelectedEvent(e.target.value)}>
+          <option value="">All Events</option>
+          {events.map((ev, i) => (
+            <option key={i} value={ev}>{ev}</option>
+          ))}
+        </select>
+      </div>
 
-      <h3>Feedback Sentiment Chart</h3>
-      <Pie
-        data={{
-          labels: Object.keys(summary),
-          datasets: [{
-            label: 'Feedback Sentiment',
-            data: Object.values(summary),
-            backgroundColor: ['green', 'gray', 'red'],
-          }]
-        }}
-      />
+      <Pie data={{
+        labels: Object.keys(summary),
+        datasets: [{
+          data: Object.values(summary),
+          backgroundColor: ['green', 'gray', 'red'],
+        }]
+      }} />
 
-      <h3>Feedback Table</h3>
-      <table border="1" cellPadding="8">
+      <button onClick={handleExport}>Download CSV</button>
+
+      <h3>Feedbacks</h3>
+      <table border="1">
         <thead>
-          <tr><th>Name</th><th>Event</th><th>Feedback</th><th>Sentiment</th></tr>
+          <tr><th>Name</th><th>Event</th><th>Feedback</th><th>Sentiment</th><th>Rating</th><th>Date</th></tr>
         </thead>
         <tbody>
-          {feedbacks.map((f, i) => (
+          {filteredFeedbacks.map((f, i) => (
             <tr key={i}>
-              <td>{f[0]}</td>
-              <td>{f[1]}</td>
-              <td>{f[2]}</td>
-              <td>{f[3]}</td>
+              <td>{f[0]}</td><td>{f[1]}</td><td>{f[2]}</td><td>{f[3]}</td><td>{f[4]}</td><td>{f[5]}</td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <h3>Word Cloud</h3>
+      <img src={wordcloudURL} alt="Word Cloud" width="600" />
     </div>
   );
 }

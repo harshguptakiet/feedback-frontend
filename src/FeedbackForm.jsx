@@ -1,43 +1,44 @@
-// src/FeedbackForm.jsx
 import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Card, CardContent, Alert } from '@mui/material';
+import './style.css';
 
 function FeedbackForm() {
-  const [feedback, setFeedback] = useState('');
-  const [event, setEvent] = useState('');
-  const [name, setName] = useState('');
+  const [formData, setFormData] = useState({ name: '', event: '', feedback: '', rating: 0 });
   const [response, setResponse] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
-    const res = await fetch('https://feedback-backend-k4pk.onrender.com/submit', {
+    const res = await fetch('https://<your-backend>.onrender.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, event, feedback }),
+      body: JSON.stringify(formData),
     });
     const data = await res.json();
     setResponse(data);
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-      <Card>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>Submit Your Feedback</Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField fullWidth label="Name" margin="normal" value={name} onChange={e => setName(e.target.value)} />
-            <TextField fullWidth label="Event or Club" margin="normal" value={event} onChange={e => setEvent(e.target.value)} />
-            <TextField fullWidth multiline rows={4} label="Feedback" margin="normal" value={feedback} onChange={e => setFeedback(e.target.value)} />
-            <Button variant="contained" color="primary" type="submit" fullWidth>Submit</Button>
-          </form>
-          {response && (
-            <Alert severity="info" style={{ marginTop: '1rem' }}>
-              Sentiment: <strong>{response.sentiment}</strong>
-            </Alert>
-          )}
-        </CardContent>
-      </Card>
-    </Container>
+    <div className="App">
+      <h1>Student Feedback</h1>
+      <form onSubmit={handleSubmit}>
+        <input name="name" placeholder="Name" onChange={handleChange} />
+        <input name="event" placeholder="Event" onChange={handleChange} />
+        <textarea name="feedback" placeholder="Your feedback" onChange={handleChange} />
+        <label>Rating:</label>
+        <select name="rating" onChange={handleChange}>
+          <option value="1">★</option>
+          <option value="2">★★</option>
+          <option value="3">★★★</option>
+          <option value="4">★★★★</option>
+          <option value="5">★★★★★</option>
+        </select>
+        <button type="submit">Submit</button>
+      </form>
+      {response && <h3>Sentiment: {response.sentiment}</h3>}
+    </div>
   );
 }
 
