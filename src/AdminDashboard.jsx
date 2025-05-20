@@ -12,7 +12,7 @@ function AdminDashboard() {
   const [wordcloudURL, setWordcloudURL] = useState('');
 
   useEffect(() => {
-    fetch('https://<your-backend>.onrender.com/admin/summary')
+    fetch('https://feedback-backend-k4pk.onrender.com/admin/summary')
       .then(res => res.json())
       .then(data => {
         setSummary(data.summary);
@@ -20,13 +20,13 @@ function AdminDashboard() {
         setEvents(data.events);
       });
 
-    setWordcloudURL('https://<your-backend>.onrender.com/admin/wordcloud');
+    setWordcloudURL('https://feedback-backend-k4pk.onrender.com/admin/wordcloud');
   }, []);
 
   const filteredFeedbacks = selectedEvent ? feedbacks.filter(f => f[1] === selectedEvent) : feedbacks;
 
   const handleExport = () => {
-    window.open('https://<your-backend>.onrender.com/admin/export');
+    window.open('https://feedback-backend-k4pk.onrender.com/admin/export');
   };
 
   return (
