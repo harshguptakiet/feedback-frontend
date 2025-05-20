@@ -9,7 +9,7 @@ function FeedbackForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch('https://feedback-backend-k4pk.onrender.com', {
+    const res = await fetch('https://feedback-backend-k4pk.onrender.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, event, feedback }),
