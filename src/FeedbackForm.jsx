@@ -1,5 +1,6 @@
+// src/FeedbackForm.jsx
 import React, { useState } from 'react';
-import './App.css';
+import { Container, TextField, Button, Typography, Card, CardContent, Alert } from '@mui/material';
 
 function FeedbackForm() {
   const [feedback, setFeedback] = useState('');
@@ -19,20 +20,24 @@ function FeedbackForm() {
   };
 
   return (
-    <div className="App">
-      <h1>Student Feedback</h1>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
-        <input placeholder="Event/Club" value={event} onChange={e => setEvent(e.target.value)} />
-        <textarea placeholder="Your feedback" value={feedback} onChange={e => setFeedback(e.target.value)} />
-        <button type="submit">Submit</button>
-      </form>
-      {response && (
-        <div>
-          <h3>Sentiment: {response.sentiment}</h3>
-        </div>
-      )}
-    </div>
+    <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
+      <Card>
+        <CardContent>
+          <Typography variant="h5" gutterBottom>Submit Your Feedback</Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField fullWidth label="Name" margin="normal" value={name} onChange={e => setName(e.target.value)} />
+            <TextField fullWidth label="Event or Club" margin="normal" value={event} onChange={e => setEvent(e.target.value)} />
+            <TextField fullWidth multiline rows={4} label="Feedback" margin="normal" value={feedback} onChange={e => setFeedback(e.target.value)} />
+            <Button variant="contained" color="primary" type="submit" fullWidth>Submit</Button>
+          </form>
+          {response && (
+            <Alert severity="info" style={{ marginTop: '1rem' }}>
+              Sentiment: <strong>{response.sentiment}</strong>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 
