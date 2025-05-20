@@ -1,20 +1,16 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import FeedbackForm from './FeedbackForm';
-import AdminLogin from './AdminLogin';
+import Home from './Home'; // or your main page
 import AdminDashboard from './AdminDashboard';
-import './App.css';
-
-
+import Login from './Login';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<FeedbackForm />} />
-        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/" element={<Home />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
