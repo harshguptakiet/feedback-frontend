@@ -1,18 +1,24 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Home'; // or your main page
-import AdminDashboard from './AdminDashboard';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
+import AdminDashboard from './AdminDashboard';
+import FeedbackForm from './FeedbackForm';
+import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <Router>
+        <Routes>
+          {/* Default route shows feedback form */}
+          <Route path="/" element={<FeedbackForm />} />
+          {/* Admin login page */}
+          <Route path="/login" element={<Login />} />
+          {/* Admin dashboard after login */}
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 
