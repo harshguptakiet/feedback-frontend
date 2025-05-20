@@ -22,7 +22,12 @@ function FeedbackForm() {
 
   return (
     <div className="App">
-      <h1>Student Feedback</h1>
+     
+      <h1 style={{ color: '#0ff', textShadow: '0 0 10px #0ff' }}>📝 Submit Your Feedback</h1>
+<p style={{ color: '#0ff' }}>
+  ✨ We use AI (Sentiment Analysis) to understand the tone of your feedback in real-time!
+</p>
+
       <form onSubmit={handleSubmit}>
         <input name="name" placeholder="Name" onChange={handleChange} />
         <input name="event" placeholder="Event" onChange={handleChange} />

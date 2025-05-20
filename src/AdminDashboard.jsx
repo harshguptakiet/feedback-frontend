@@ -31,7 +31,12 @@ function AdminDashboard() {
 
   return (
     <div>
-      <h2>Admin Dashboard</h2>
+      
+      <h2 style={{ color: '#0ff', textShadow: '0 0 10px #0ff' }}>📊 Admin Dashboard</h2>
+<p style={{ color: '#0ff' }}>
+  🔍 This dashboard displays a live summary of feedback sentiments submitted by users. Our AI model classifies responses into Positive, Neutral, or Negative.
+</p>
+
 
       <div>
         <label>Filter by Event:</label>
